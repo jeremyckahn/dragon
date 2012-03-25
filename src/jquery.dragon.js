@@ -8,19 +8,24 @@
    *   - noCursor
    */
   $.fn.dragon = function (opts) {
-    opts = opts || {};
-    this.css('position', 'absolute');
-
-    if (!opts.noCursor) {
-      this.css('cursor', 'pointer');
-    }
-
-    initDragonEls(this, opts);
+    initDragonEls(this, opts || {});
   };
 
   function initDragonEls ($els, opts) {
+    $els.css('position', 'absolute');
+
+    if (!opts.noCursor) {
+      $els.css('cursor', 'pointer');
+    }
+
     $els.each(function (i, el) {
       var $el = $(el);
+      var position = $el.position();
+      var top = position.top;
+      var left = position.left;
+
+      $el.css('top', top);
+      $el.css('left', left);
       $el.on('mousedown', $.proxy(onMouseDown, $el));
     });
   }
