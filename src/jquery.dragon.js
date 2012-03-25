@@ -1,6 +1,7 @@
 ;(function ($) {
 
   var $win = $(window);
+  var $doc = $(document);
 
   /**
    * Options:
@@ -15,7 +16,7 @@
     $els.css('position', 'absolute');
 
     if (!opts.noCursor) {
-      $els.css('cursor', 'pointer');
+      $els.css('cursor', 'move');
     }
 
     $els.each(function (i, el) {
@@ -24,9 +25,12 @@
       var top = position.top;
       var left = position.left;
 
-      $el.css('top', top);
-      $el.css('left', left);
-      $el.on('mousedown', $.proxy(onMouseDown, $el));
+      $el
+        .css({
+          'top': top
+          ,'left': left
+        })
+        .on('mousedown', $.proxy(onMouseDown, $el));
     });
   }
 
@@ -47,6 +51,8 @@
       .on('mouseup', onMouseUpInstance)
       .on('blur', onMouseUpInstance)
       .on('mousemove', onMouseMoveInstance);
+
+    $doc.on('selectstart', preventSelect);
   }
 
   function onMouseUp (evt) {
@@ -54,6 +60,7 @@
     $win.off('mouseup', data.onMouseUp);
     $win.off('blur', data.onMouseUp);
     $win.off('mousemove', data.onMouseMove);
+    $doc.off('selectstart', preventSelect);
     delete data.onMouseUp;
     delete data.onMouseMove;
   }
@@ -64,6 +71,18 @@
       'left': evt.pageX + data.grabPointX
       ,'top': evt.pageY + data.grabPointY
     });
+  }
+
+  // This event handler fixes some craziness with the startselect event breaking
+  // the cursor CSS setting.
+  // http://forum.jquery.com/topic/chrome-text-select-cursor-on-drag
+  function preventSelect(evt) {
+    evt.preventDefault();
+    if (window.getSelection) {
+      window.getSelection().removeAllRanges();
+    } else if (document.selection) {
+      document.selection.clear();
+    }
   }
 
 } (jQuery));
