@@ -14,6 +14,9 @@
 
   function initDragonEls ($els, opts) {
     $els.css('position', 'absolute');
+    $els.attr('draggable', 'true');
+    //$els.attr('ondragstart', 'return false;');
+    $els.on('dragstart', preventDefault);
 
     if (!opts.noCursor) {
       $els.css('cursor', 'move');
@@ -77,12 +80,16 @@
   // the cursor CSS setting.
   // http://forum.jquery.com/topic/chrome-text-select-cursor-on-drag
   function preventSelect(evt) {
-    evt.preventDefault();
+    preventDefault(evt);
     if (window.getSelection) {
       window.getSelection().removeAllRanges();
     } else if (document.selection) {
       document.selection.clear();
     }
+  }
+
+  function preventDefault (evt) {
+    evt.preventDefault();
   }
 
 } (jQuery));
