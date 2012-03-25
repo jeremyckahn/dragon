@@ -5,17 +5,45 @@
   <script src="lib/jquery.js"></script>
   <script src="src/jquery.dragon.js"></script>
   <style>
-    #dragon-test {
-      background: #f00;
+    .dragon {
+      float: left;
       height: 100px;
       width: 100px;
+    }
+
+    #dragon-basic {
+      background: #f00;
+    }
+
+    #dragon-x {
+      background: #00f;
+    }
+
+    #dragon-y {
+      background: #0f0;
     }
   </style>
 </head>
 <body>
-  <div id="dragon-test"></div>
+  <div id="dragon-basic" class="dragon">
+    <p>Drag me anywhere!</p>
+  </div>
+  <div id="dragon-x" class="dragon">
+    <p>Drag me left and right!</p>
+  </div>
+  <div id="dragon-y" class="dragon">
+    <p>Drag me up and down!</p>
+  </div>
   <script>
-    $('#dragon-test').dragon({
+    $('#dragon-y').dragon({
+      'axis': $.fn.dragon.AXIS_Y
+    });
+
+    $('#dragon-x').dragon({
+      'axis': $.fn.dragon.AXIS_X
+    });
+
+    $('#dragon-basic').dragon({
       'onDragStart': function (evt) {
         console.log('Drag start.');
       }
@@ -26,6 +54,7 @@
         console.log('Drag end.');
       }
     });
+
   </script>
 </body>
 </html>

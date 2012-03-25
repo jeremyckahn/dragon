@@ -12,8 +12,14 @@
     initDragonEls(this, opts || {});
   };
 
+  // CONSTANTS
+  $.extend($.fn.dragon, {
+    'AXIS_X': 'x'
+    ,'AXIS_Y': 'y'
+  });
+
   function initDragonEls ($els, opts) {
-    $els.css('position', 'absolute');
+    opts.axis = opts.axis || {};
     $els.attr('draggable', 'true');
     $els.on('dragstart', preventDefault);
 
@@ -31,8 +37,10 @@
         .css({
           'top': top
           ,'left': left
+          ,'position': 'absolute'
         })
         .data('dragon', {})
+        .data('dragon-opts', opts)
         .on('mousedown', $.proxy(onMouseDown, $el))
         .on('dragon-dragstart', $.proxy(opts.onDragStart || $.noop, $el))
         .on('dragon-drag', $.proxy(opts.onDrag || $.noop, $el))
@@ -79,11 +87,18 @@
 
   function onMouseMove (evt) {
     var data = this.data('dragon');
-    this.css({
-      'left': evt.pageX + data.grabPointX
-      ,'top': evt.pageY + data.grabPointY
-    });
+    var opts = this.data('dragon-opts');
+    var newCoords = {};
 
+    if (opts.axis !== $.fn.dragon.AXIS_X) {
+      newCoords.top = evt.pageY + data.grabPointY;
+    }
+
+    if (opts.axis !== $.fn.dragon.AXIS_Y) {
+      newCoords.left = evt.pageX + data.grabPointX;
+    }
+
+    this.css(newCoords);
     this.trigger('dragon-drag');
   }
 
