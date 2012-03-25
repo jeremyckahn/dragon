@@ -39,11 +39,14 @@
       ,'onMouseMove': onMouseMoveInstance
       ,'left': initialPosition.left
       ,'top': initialPosition.top
+      ,'grabPointX': initialPosition.left - evt.pageX
+      ,'grabPointY': initialPosition.top - evt.pageY
     });
 
-    $win.on('mouseup', onMouseUpInstance);
-    $win.on('blur', onMouseUpInstance);
-    $win.on('mousemove', onMouseMoveInstance);
+    $win
+      .on('mouseup', onMouseUpInstance)
+      .on('blur', onMouseUpInstance)
+      .on('mousemove', onMouseMoveInstance);
   }
 
   function onMouseUp (evt) {
@@ -56,6 +59,11 @@
   }
 
   function onMouseMove (evt) {
+    var data = this.data('dragon');
+    this.css({
+      'left': evt.pageX + data.grabPointX
+      ,'top': evt.pageY + data.grabPointY
+    });
   }
 
 } (jQuery));
