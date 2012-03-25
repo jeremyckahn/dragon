@@ -15,7 +15,17 @@
 <body>
   <div id="dragon-test"></div>
   <script>
-    $('#dragon-test').dragon();
+    $('#dragon-test').dragon({
+      'onDragStart': function (evt) {
+        console.log('Drag start.');
+      }
+      ,'onDrag': function (evt) {
+        console.log('Dragging.');
+      }
+      ,'onDragEnd': function (evt) {
+        console.log('Drag end.');
+      }
+    });
   </script>
 </body>
 </html>
