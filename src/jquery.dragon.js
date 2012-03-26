@@ -110,7 +110,7 @@
       var containerLeft = containerOffset.left;
       var containerRight = containerLeft + containerWidth;
 
-      if (newCoords.left < containerLeft
+      if (newCoords.left < 0
           || offset.left < containerLeft) {
         newCoords.left = 0;
       }
@@ -118,6 +118,16 @@
       if (newCoords.left + width > containerWidth
           || offset.left > containerRight) {
         newCoords.left = containerWidth - width;
+      }
+
+      if (newCoords.top < 0
+          || offset.top < containerTop) {
+        newCoords.top = 0;
+      }
+
+      if (newCoords.top + height > containerHeight
+          || offset.top > containerBottom) {
+        newCoords.top = containerHeight - height;
       }
     }
 
