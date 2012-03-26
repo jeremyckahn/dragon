@@ -22,6 +22,18 @@
     #dragon-y {
       background: #0f0;
     }
+
+    #dragon-container {
+      border: dotted 1px #000;
+      height: 300px;
+      position: relative;
+      top: 120px;
+      width: 300px;
+    }
+
+    #dragon-contained {
+      background: #0ff;
+    }
   </style>
 </head>
 <body>
@@ -33,6 +45,11 @@
   </div>
   <div id="dragon-y" class="dragon">
     <p>Drag me up and down!</p>
+  </div>
+  <div id="dragon-container">
+    <div id="dragon-contained" class="dragon">
+      <p>Drag me within my bounds!</p>
+    </div>
   </div>
   <script>
     $('#dragon-y').dragon({
@@ -53,6 +70,10 @@
       ,'onDragEnd': function (evt) {
         console.log('Drag end.');
       }
+    });
+
+    $('#dragon-contained').dragon({
+      'within': $('#dragon-container')
     });
 
   </script>
