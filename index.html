@@ -34,6 +34,10 @@
     #dragon-contained {
       background: #0ff;
     }
+
+    #dragon-handle {
+      background: #ff8;
+    }
   </style>
 </head>
 <body>
@@ -46,12 +50,19 @@
   <div id="dragon-y" class="dragon">
     <p>Drag me up and down!</p>
   </div>
+  <div id="dragon-handle" class="dragon">
+    <p>Drag me by my text!</p>
+  </div>
   <div id="dragon-container">
     <div id="dragon-contained" class="dragon">
       <p>Drag me within my bounds!</p>
     </div>
   </div>
   <script>
+    $('#dragon-handle').dragon({
+      'handle': 'p'
+    });
+
     $('#dragon-y').dragon({
       'axis': $.fn.dragon.AXIS_Y
     });

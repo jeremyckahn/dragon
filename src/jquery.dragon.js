@@ -7,6 +7,12 @@
    * Options:
    *
    *   @param {boolean} noCursor Prevents the drag cursor from being "move"
+   *   @param {string} axis The axis to constrain dragging to.  Either 'x' or
+   *     'y'.  Disabled by default.
+   *   @param {jQuery} within The jQuery'ed element's bounds to constrain the
+   *     drag range within.
+   *   @param {string} handle A jQuery selector for the "handle" element within
+   *     the dragon element that initializes the dragging action.
    */
   $.fn.dragon = function (opts) {
     initDragonEls(this, opts || {});
@@ -24,7 +30,11 @@
     $els.on('dragstart', preventDefault);
 
     if (!opts.noCursor) {
-      $els.css('cursor', 'move');
+      if (opts.handle) {
+        $els.find(opts.handle).css('cursor', 'move');
+      } else {
+        $els.css('cursor', 'move');
+      }
     }
 
     $els.each(function (i, el) {
@@ -41,10 +51,16 @@
         })
         .data('dragon', {})
         .data('dragon-opts', opts)
-        .on('mousedown', $.proxy(onMouseDown, $el))
         .on('dragon-dragstart', $.proxy(opts.onDragStart || $.noop, $el))
         .on('dragon-drag', $.proxy(opts.onDrag || $.noop, $el))
         .on('dragon-dragend', $.proxy(opts.onDragEnd || $.noop, $el));
+
+      if (opts.handle) {
+        $el.on('mousedown', opts.handle, $.proxy(onMouseDown, $el));
+      } else {
+        $el.on('mousedown', $.proxy(onMouseDown, $el));
+      }
+
     });
   }
 
