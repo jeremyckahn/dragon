@@ -86,7 +86,7 @@
       .on('mousemove', onMouseMoveInstance);
 
     $doc.on('selectstart', preventSelect);
-    this.trigger('dragon-dragstart');
+    fire('onDragStart', this);
   }
 
   function onMouseUp (evt) {
@@ -98,7 +98,7 @@
     $doc.off('selectstart', preventSelect);
     delete data.onMouseUp;
     delete data.onMouseMove;
-    this.trigger('dragon-dragend');
+    fire('onDragEnd', this);
   }
 
   function onMouseMove (evt) {
@@ -148,7 +148,7 @@
     }
 
     this.css(newCoords);
-    this.trigger('dragon-drag');
+    fire('onDrag', this);
   }
 
   // This event handler fixes some craziness with the startselect event breaking
@@ -165,6 +165,11 @@
 
   function preventDefault (evt) {
     evt.preventDefault();
+  }
+
+  function fire (event, $el) {
+    var handler = $el.data('dragon-opts')[event];
+    handler && handler();
   }
 
 } (jQuery));
