@@ -8,6 +8,23 @@ Additionally, I personally didn't need all of features that jQueryUI's fn.dragga
 
 There's a very good chance that Dragon isn't a good fit for your app.  But it was a good fit for mine, and perhaps you have similar requirements.  Bon Appétit!
 
+## API
+
+Call it like this:
+
+````javascript
+$('.selector').dragon(options);
+````
+
+`options` is an Object.  It can be omitted.
+
+###Options:
+
+  * `noCursor`: A Boolean.  False by default.  If true, the mouse cursor icon isn't changed to "move" when the element is dragged.
+  * `axis`: A string.  If this is "x" or `$.fn.dragon.AXIS_X`, the element can only be dragged along the X axis.  If it is "y" or `$.fn.dragon.AXIS_Y`, the element can only be dragged along the Y axis.
+  * `within`: A jQuery'ed element.  A containing element to constrain the movement of the `dragon`ed element within.
+  * `handle`: A string.  This should be a jQuery selector targeting a child of the `dragon`ed element.  This child element will act as the "handle" for dragging the `dragon`ed element.
+
 ## Compatibility
 
   * IE6 and above.  Hooray!
