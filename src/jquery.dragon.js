@@ -2,6 +2,7 @@
 
   var $win = $(window);
   var $doc = $(document);
+  var noop = $.noop || function () {};
 
   /**
    * Options:
@@ -51,9 +52,9 @@
         })
         .data('dragon', {})
         .data('dragon-opts', opts)
-        .on('dragon-dragstart', $.proxy(opts.onDragStart || $.noop, $el))
-        .on('dragon-drag', $.proxy(opts.onDrag || $.noop, $el))
-        .on('dragon-dragend', $.proxy(opts.onDragEnd || $.noop, $el));
+        .on('dragon-dragstart', $.proxy(opts.onDragStart || noop, $el))
+        .on('dragon-drag', $.proxy(opts.onDrag || noop, $el))
+        .on('dragon-dragend', $.proxy(opts.onDragEnd || noop, $el));
 
       if (opts.handle) {
         $el.on('mousedown', opts.handle, $.proxy(onMouseDown, $el));
@@ -172,4 +173,4 @@
     handler && handler();
   }
 
-} (jQuery));
+} (this.jQuery));
