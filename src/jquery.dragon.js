@@ -121,17 +121,20 @@
       var offset = this.offset();
       var width = this.outerWidth(true);
       var height = this.outerHeight(true);
-      var containerWidth = opts.within.innerWidth();
-      var containerHeight = opts.within.innerHeight();
-      var containerOffset = opts.within.offset();
-      var containerTop = containerOffset.top;
+      var container = opts.within;
+      var containerWidth = container.innerWidth();
+      var containerHeight = container.innerHeight();
+      var containerOffset = container.offset();
+      var containerPaddingTop = parseInt(container.css('paddingTop'), 10);
+      var containerTop = containerOffset.top + containerPaddingTop;
       var containerBottom = containerTop + containerHeight;
-      var containerLeft = containerOffset.left;
+      var containerPaddingLeft = parseInt(container.css('paddingLeft'), 10);
+      var containerLeft = containerOffset.left + containerPaddingLeft;
       var containerRight = containerLeft + containerWidth;
 
-      if (newCoords.left < 0
+      if (newCoords.left < containerPaddingLeft
           || offset.left < containerLeft) {
-        newCoords.left = 0;
+        newCoords.left = containerPaddingLeft;
       }
 
       if (newCoords.left + width > containerWidth
@@ -139,9 +142,9 @@
         newCoords.left = containerWidth - width;
       }
 
-      if (newCoords.top < 0
+      if (newCoords.top < containerPaddingTop
           || offset.top < containerTop) {
-        newCoords.top = 0;
+        newCoords.top = containerPaddingTop;
       }
 
       if (newCoords.top + height > containerHeight
