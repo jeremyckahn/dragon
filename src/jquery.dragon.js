@@ -12,6 +12,9 @@
    *     drag range within.
    *   @param {string} handle A jQuery selector for the "handle" element within
    *     the dragon element that initializes the dragging action.
+   *   @param {function} onDragStart Fires when dragging begins.
+   *   @param {function} onDrag Fires for every tick of the drag.
+   *   @param {function} onDragEnd Fires when dragging ends.
    */
   $.fn.dragon = function (opts) {
     initDragonEls(this, opts || {});
