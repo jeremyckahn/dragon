@@ -167,6 +167,7 @@
     evt.preventDefault();
   }
 
+  // Yep, you only get to bind one event handler.  Much faster this way.
   function fire (event, $el) {
     var handler = $el.data('dragon-opts')[event];
     handler && handler();
