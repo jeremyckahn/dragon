@@ -1,7 +1,7 @@
 ;(function ($) {
 
   var $win = $(window);
-  var $doc = $(document);
+  var $doc = $(document.documentElement);
   var noop = $.noop || function () {};
 
   /**
@@ -14,6 +14,9 @@
    *     drag range within.
    *   @param {string} handle A jQuery selector for the "handle" element within
    *     the dragon element that initializes the dragging action.
+   *   @param {function} onDragStart Fires when dragging begins.
+   *   @param {function} onDrag Fires for every tick of the drag.
+   *   @param {function} onDragEnd Fires when dragging ends.
    */
   $.fn.dragon = function (opts) {
     initDragonEls(this, opts || {});
@@ -81,22 +84,23 @@
       ,'grabPointY': initialPosition.top - evt.pageY
     });
 
-    $win
+    $doc
       .on('mouseup', onMouseUpInstance)
       .on('blur', onMouseUpInstance)
       .on('mousemove', onMouseMoveInstance);
 
     $doc.on('selectstart', preventSelect);
-    fire('onDragStart', this);
   }
 
   function onMouseUp (evt) {
     var data = this.data('dragon');
     data.isDragging = false;
-    $win.off('mouseup', data.onMouseUp);
-    $win.off('blur', data.onMouseUp);
-    $win.off('mousemove', data.onMouseMove);
-    $doc.off('selectstart', preventSelect);
+
+    $doc.off('mouseup', data.onMouseUp)
+      .off('blur', data.onMouseUp)
+      .off('mousemove', data.onMouseMove)
+      .off('selectstart', preventSelect);
+
     delete data.onMouseUp;
     delete data.onMouseMove;
     fire('onDragEnd', this);
@@ -117,19 +121,22 @@
 
     if (opts.within) {
       var offset = this.offset();
-      var width = this.width();
-      var height = this.height();
-      var containerWidth = opts.within.width();
-      var containerHeight = opts.within.height();
-      var containerOffset = opts.within.offset();
-      var containerTop = containerOffset.top;
+      var width = this.outerWidth(true);
+      var height = this.outerHeight(true);
+      var container = opts.within;
+      var containerWidth = container.innerWidth();
+      var containerHeight = container.innerHeight();
+      var containerOffset = container.offset();
+      var containerPaddingTop = parseInt(container.css('paddingTop'), 10);
+      var containerTop = containerOffset.top + containerPaddingTop;
       var containerBottom = containerTop + containerHeight;
-      var containerLeft = containerOffset.left;
+      var containerPaddingLeft = parseInt(container.css('paddingLeft'), 10);
+      var containerLeft = containerOffset.left + containerPaddingLeft;
       var containerRight = containerLeft + containerWidth;
 
-      if (newCoords.left < 0
+      if (newCoords.left < containerPaddingLeft
           || offset.left < containerLeft) {
-        newCoords.left = 0;
+        newCoords.left = containerPaddingLeft;
       }
 
       if (newCoords.left + width > containerWidth
@@ -137,9 +144,9 @@
         newCoords.left = containerWidth - width;
       }
 
-      if (newCoords.top < 0
+      if (newCoords.top < containerPaddingTop
           || offset.top < containerTop) {
-        newCoords.top = 0;
+        newCoords.top = containerPaddingTop;
       }
 
       if (newCoords.top + height > containerHeight
@@ -168,6 +175,7 @@
     evt.preventDefault();
   }
 
+  // Yep, you only get to bind one event handler.  Much faster this way.
   function fire (event, $el) {
     var handler = $el.data('dragon-opts')[event];
     handler && handler();
