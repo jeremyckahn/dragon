@@ -119,10 +119,10 @@
 
     if (opts.within) {
       var offset = this.offset();
-      var width = this.width();
-      var height = this.height();
-      var containerWidth = opts.within.width();
-      var containerHeight = opts.within.height();
+      var width = this.outerWidth(true);
+      var height = this.outerHeight(true);
+      var containerWidth = opts.within.innerWidth();
+      var containerHeight = opts.within.innerHeight();
       var containerOffset = opts.within.offset();
       var containerTop = containerOffset.top;
       var containerBottom = containerTop + containerHeight;
