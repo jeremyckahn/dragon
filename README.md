@@ -29,9 +29,9 @@ $('.selector').dragon(options);
 
 These go in the `options` Object as well.  Separated from the above list for clarity.
 
-  * `onDragStart': A function.  Fires when dragging begins.
-  * `onDrag': A function.  Fires for each tick of the drag.
-  * `onDragEnd': A function.  Fires when dragging ends.
+  * `onDragStart`: A function.  Fires when dragging begins.
+  * `onDrag`: A function.  Fires for each tick of the drag.
+  * `onDragEnd`: A function.  Fires when dragging ends.
 
 ## Compatibility
 
