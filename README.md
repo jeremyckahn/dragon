@@ -33,6 +33,8 @@ These go in the `options` Object as well.  Separated from the above list for cla
   * `onDrag`: A function.  Fires for each tick of the drag.
   * `onDragEnd`: A function.  Fires when dragging ends.
 
+_Important note!_ Only one handler can be bound per event.  This is done on purpose, as I didn't want to sacrifice performance for supporting multiple event handlers.
+
 ## Compatibility
 
   * IE6 and above.  Hooray!
