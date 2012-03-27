@@ -1,7 +1,6 @@
 ;(function ($) {
 
-  var $win = $(window);
-  var $doc = $(document);
+  var $doc = $(document.documentElement);
 
   /**
    * Options:
@@ -80,22 +79,23 @@
       ,'grabPointY': initialPosition.top - evt.pageY
     });
 
-    $win
+    $doc
       .on('mouseup', onMouseUpInstance)
       .on('blur', onMouseUpInstance)
       .on('mousemove', onMouseMoveInstance);
 
     $doc.on('selectstart', preventSelect);
-    fire('onDragStart', this);
   }
 
   function onMouseUp (evt) {
     var data = this.data('dragon');
     data.isDragging = false;
-    $win.off('mouseup', data.onMouseUp);
-    $win.off('blur', data.onMouseUp);
-    $win.off('mousemove', data.onMouseMove);
-    $doc.off('selectstart', preventSelect);
+
+    $doc.off('mouseup', data.onMouseUp)
+      .off('blur', data.onMouseUp)
+      .off('mousemove', data.onMouseMove)
+      .off('selectstart', preventSelect);
+
     delete data.onMouseUp;
     delete data.onMouseMove;
     fire('onDragEnd', this);
