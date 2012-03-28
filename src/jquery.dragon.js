@@ -166,7 +166,7 @@
   }
 
   // This event handler fixes some craziness with the startselect event breaking
-  // the cursor CSS setting.
+  // the cursor style.
   // http://forum.jquery.com/topic/chrome-text-select-cursor-on-drag
   function preventSelect(evt) {
     preventDefault(evt);
