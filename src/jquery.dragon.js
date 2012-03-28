@@ -1,3 +1,9 @@
+/**
+ * jQuery Dragon.  It's a dragging plugin!
+ *   By Jeremy Kahn (jeremyckahn@gmail.com)
+ *   MIT License.
+ *   For more info: https://github.com/jeremyckahn/dragon
+ */
 ;(function ($) {
 
   var $win = $(window);
