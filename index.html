@@ -26,7 +26,7 @@
     #dragon-container {
       border: dotted 1px #000;
       height: 300px;
-      position: relative;
+      position: absolute;
       top: 120px;
       width: 300px;
     }
@@ -41,6 +41,11 @@
   </style>
 </head>
 <body>
+  <div id="dragon-container">
+    <div id="dragon-contained" class="dragon">
+      <p>Drag me within my bounds!</p>
+    </div>
+  </div>
   <div id="dragon-basic" class="dragon">
     <p>Drag me anywhere!</p>
   </div>
@@ -52,11 +57,6 @@
   </div>
   <div id="dragon-handle" class="dragon">
     <p>Drag me by my text!</p>
-  </div>
-  <div id="dragon-container">
-    <div id="dragon-contained" class="dragon">
-      <p>Drag me within my bounds!</p>
-    </div>
   </div>
   <script>
     $('#dragon-handle').dragon({
