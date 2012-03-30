@@ -1,5 +1,6 @@
 /**
  * jQuery Dragon.  It's a dragging plugin!
+ *   v0.1.0
  *   By Jeremy Kahn (jeremyckahn@gmail.com)
  *   MIT License.
  *   For more info: https://github.com/jeremyckahn/dragon
