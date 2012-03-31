@@ -1,6 +1,6 @@
 /**
  * jQuery Dragon.  It's a dragging plugin!
- *   v0.1.0
+ *   v0.1.1
  *   By Jeremy Kahn (jeremyckahn@gmail.com)
  *   MIT License.
  *   For more info: https://github.com/jeremyckahn/dragon
@@ -127,6 +127,7 @@
     }
 
     if (opts.within) {
+      // omg!
       var offset = this.offset();
       var width = this.outerWidth(true);
       var height = this.outerHeight(true);
@@ -140,25 +141,33 @@
       var containerPaddingLeft = parseInt(container.css('paddingLeft'), 10);
       var containerLeft = containerOffset.left + containerPaddingLeft;
       var containerRight = containerLeft + containerWidth;
+      var marginLeft = parseInt(this.css('marginLeft'), 10);
+      var marginTop = parseInt(this.css('marginTop'), 10);
+      var marginBottom = parseInt(this.css('marginBottom'), 10);
+      var marginRight = parseInt(this.css('marginRight'), 10);
+      var minDistanceLeft = containerPaddingLeft - marginLeft;
+      var minDistanceRight = containerWidth + marginRight;
+      var minDistanceTop = containerPaddingTop - marginTop;
+      var minDistanceBottom = containerHeight + marginBottom;
 
-      if (newCoords.left < containerPaddingLeft
+      if (newCoords.left < minDistanceLeft
           || offset.left < containerLeft) {
-        newCoords.left = containerPaddingLeft;
+        newCoords.left = minDistanceLeft;
       }
 
-      if (newCoords.left + width > containerWidth
+      if (newCoords.left + width > minDistanceRight
           || offset.left > containerRight) {
-        newCoords.left = containerWidth - width;
+        newCoords.left = minDistanceRight - width;
       }
 
-      if (newCoords.top < containerPaddingTop
+      if (newCoords.top < minDistanceTop
           || offset.top < containerTop) {
-        newCoords.top = containerPaddingTop;
+        newCoords.top = minDistanceTop;
       }
 
-      if (newCoords.top + height > containerHeight
+      if (newCoords.top + height > minDistanceBottom
           || offset.top > containerBottom) {
-        newCoords.top = containerHeight - height;
+        newCoords.top = minDistanceBottom - height;
       }
     }
 
