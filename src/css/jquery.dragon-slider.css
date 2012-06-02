@@ -1,0 +1,11 @@
+.dragon-slider {
+  background: #ddd;
+}
+
+  .dragon-slider,
+  .dragon-slider-handle {
+    height: 20px;
+  }
+
+  .dragon-slider-handle {
+  }

@@ -32,8 +32,10 @@
     $els.each(function (i, el) {
       var $el = $(el);
       var $handle = createDragHandle($el);
-      $el.addClass('dragon-slider');
-      $el.append($handle);
+      $el
+        .addClass('dragon-slider')
+        .width(opts.width)
+        .append($handle);
     });
   }
 
