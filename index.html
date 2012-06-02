@@ -4,6 +4,7 @@
   <title>ROAR!</title>
   <script src="lib/jquery.js"></script>
   <script src="src/jquery.dragon.js"></script>
+  <script src="src/jquery.dragon-slider.js"></script>
   <style>
     .dragon {
       float: left;
@@ -29,6 +30,11 @@
       position: absolute;
       top: 120px;
       width: 300px;
+    }
+
+    #dragon-slider {
+      position: absolute;
+      top: 450px;
     }
 
     #dragon-contained {
@@ -65,6 +71,7 @@
   <div id="dragon-event" class="dragon">
     <p>I log things as you drag me!</p>
   </div>
+  <div id="dragon-slider"></div>
   <script>
     $('#dragon-event').dragon({
       'dragStart': function () {
@@ -95,6 +102,8 @@
     $('#dragon-contained').dragon({
       'within': $('#dragon-container')
     });
+
+    $('#dragon-slider').dragonSlider();
 
   </script>
 </body>

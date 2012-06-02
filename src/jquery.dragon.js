@@ -11,6 +11,7 @@
   var $doc = $(document.documentElement);
   var noop = $.noop || function () {};
 
+
   /**
    * Options:
    *
@@ -29,11 +30,13 @@
     initDragonEls(this, opts || {});
   };
 
+
   // CONSTANTS
   $.extend($.fn.dragon, {
     'AXIS_X': 'x'
     ,'AXIS_Y': 'y'
   });
+
 
   function initDragonEls ($els, opts) {
     opts.axis = opts.axis || {};
@@ -72,6 +75,7 @@
     });
   }
 
+
   function onMouseDown (evt) {
     var data = this.data('dragon');
     var wasAlreadyDragging = data.isDragging;
@@ -97,6 +101,7 @@
     fire('dragStart', this);
   }
 
+
   function onMouseUp (evt) {
     var data = this.data('dragon');
     data.isDragging = false;
@@ -110,6 +115,7 @@
     delete data.onMouseMove;
     fire('dragEnd', this);
   }
+
 
   function onMouseMove (evt) {
     var data = this.data('dragon');
@@ -173,6 +179,7 @@
     fire('drag', this);
   }
 
+
   // This event handler fixes some craziness with the startselect event breaking
   // the cursor style.
   // http://forum.jquery.com/topic/chrome-text-select-cursor-on-drag
@@ -185,9 +192,11 @@
     }
   }
 
+
   function preventDefault (evt) {
     evt.preventDefault();
   }
+
 
   // Yep, you only get to bind one event handler.  Much faster this way.
   function fire (event, $el) {
