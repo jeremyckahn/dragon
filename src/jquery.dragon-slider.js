@@ -14,8 +14,16 @@
   var noop = $.noop || function () {};
 
 
+  // CONSTANTS
+  var DEFAULTS = {
+    'width': 250
+  };
+
+
   $.fn.dragonSlider = function (opts) {
-    initDragonSliderEls(this, opts || {});
+    opts = opts || {};
+    var defaultsCopy = $.extend({}, DEFAULTS);
+    initDragonSliderEls(this, $.extend(defaultsCopy, opts));
   };
 
 
@@ -23,18 +31,21 @@
 
     $els.each(function (i, el) {
       var $el = $(el);
-      var $btn = createDragHandle();
+      var $handle = createDragHandle($el);
       $el.addClass('dragon-slider');
-      $el.append($btn);
+      $el.append($handle);
     });
   }
 
 
-  function createDragHandle () {
-    var $btn = $(document.createElement('BUTTON'));
-    $btn.dragon();
+  function createDragHandle (container) {
+    var $handle = $(document.createElement('BUTTON'));
+    $handle.addClass('dragon-slider-handle');
+    $handle.dragon({
+      'within': container
+    });
 
-    return $btn;
+    return $handle;
   }
 
 } (this.jQuery));
