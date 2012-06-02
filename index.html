@@ -38,6 +38,10 @@
     #dragon-handle {
       background: #ff8;
     }
+
+    #dragon-event {
+      background: #bada55;
+    }
   </style>
 </head>
 <body>
@@ -58,7 +62,22 @@
   <div id="dragon-handle" class="dragon">
     <p>Drag me by my text!</p>
   </div>
+  <div id="dragon-event" class="dragon">
+    <p>I log things as you drag me!</p>
+  </div>
   <script>
+    $('#dragon-event').dragon({
+      'onDragStart': function () {
+        console.log('I am starting to drag!');
+      }
+      ,'onDrag': function () {
+        console.log('I am currently dragging!');
+      }
+      ,'onDragEnd': function () {
+        console.log('I stopped dragging!');
+      }
+    });
+
     $('#dragon-handle').dragon({
       'handle': 'p'
     });
@@ -71,17 +90,7 @@
       'axis': $.fn.dragon.AXIS_X
     });
 
-    $('#dragon-basic').dragon({
-      'onDragStart': function (evt) {
-        console.log('Drag start.');
-      }
-      ,'onDrag': function (evt) {
-        console.log('Dragging.');
-      }
-      ,'onDragEnd': function (evt) {
-        console.log('Drag end.');
-      }
-    });
+    $('#dragon-basic').dragon();
 
     $('#dragon-contained').dragon({
       'within': $('#dragon-container')

@@ -61,10 +61,7 @@
           ,'position': 'absolute'
         })
         .data('dragon', {})
-        .data('dragon-opts', opts)
-        .on('dragon-dragstart', $.proxy(opts.onDragStart || noop, $el))
-        .on('dragon-drag', $.proxy(opts.onDrag || noop, $el))
-        .on('dragon-dragend', $.proxy(opts.onDragEnd || noop, $el));
+        .data('dragon-opts', opts);
 
       if (opts.handle) {
         $el.on('mousedown', opts.handle, $.proxy(onMouseDown, $el));
@@ -97,6 +94,7 @@
       .on('mousemove', onMouseMoveInstance);
 
     $doc.on('selectstart', preventSelect);
+    fire('onDragStart', this);
   }
 
   function onMouseUp (evt) {
