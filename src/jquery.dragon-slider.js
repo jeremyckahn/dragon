@@ -19,8 +19,22 @@
   };
 
 
-  function initDragonSliderEls (opts) {
+  function initDragonSliderEls ($els, opts) {
 
+    $els.each(function (i, el) {
+      var $el = $(el);
+      var $btn = createDragHandle();
+      $el.addClass('dragon-slider');
+      $el.append($btn);
+    });
+  }
+
+
+  function createDragHandle () {
+    var $btn = $(document.createElement('BUTTON'));
+    $btn.dragon();
+
+    return $btn;
   }
 
 } (this.jQuery));
