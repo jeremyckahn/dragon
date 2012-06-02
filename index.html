@@ -67,13 +67,13 @@
   </div>
   <script>
     $('#dragon-event').dragon({
-      'onDragStart': function () {
+      'dragStart': function () {
         console.log('I am starting to drag!');
       }
-      ,'onDrag': function () {
+      ,'drag': function () {
         console.log('I am currently dragging!');
       }
-      ,'onDragEnd': function () {
+      ,'dragEnd': function () {
         console.log('I stopped dragging!');
       }
     });

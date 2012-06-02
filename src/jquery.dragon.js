@@ -1,6 +1,6 @@
 /**
  * jQuery Dragon.  It's a dragging plugin!
- *   v0.1.2
+ *   v0.1.3
  *   By Jeremy Kahn (jeremyckahn@gmail.com)
  *   MIT License.
  *   For more info: https://github.com/jeremyckahn/dragon
@@ -21,9 +21,9 @@
    *     drag range within.
    *   @param {string} handle A jQuery selector for the "handle" element within
    *     the dragon element that initializes the dragging action.
-   *   @param {function} onDragStart Fires when dragging begins.
-   *   @param {function} onDrag Fires for every tick of the drag.
-   *   @param {function} onDragEnd Fires when dragging ends.
+   *   @param {function} dragStart Fires when dragging begins.
+   *   @param {function} drag Fires for every tick of the drag.
+   *   @param {function} dragEnd Fires when dragging ends.
    */
   $.fn.dragon = function (opts) {
     initDragonEls(this, opts || {});
@@ -94,7 +94,7 @@
       .on('mousemove', onMouseMoveInstance);
 
     $doc.on('selectstart', preventSelect);
-    fire('onDragStart', this);
+    fire('dragStart', this);
   }
 
   function onMouseUp (evt) {
@@ -108,7 +108,7 @@
 
     delete data.onMouseUp;
     delete data.onMouseMove;
-    fire('onDragEnd', this);
+    fire('dragEnd', this);
   }
 
   function onMouseMove (evt) {
@@ -170,7 +170,7 @@
     }
 
     this.css(newCoords);
-    fire('onDrag', this);
+    fire('drag', this);
   }
 
   // This event handler fixes some craziness with the startselect event breaking

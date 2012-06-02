@@ -29,9 +29,9 @@ $('.selector').dragon(options);
 
 These go in the `options` Object as well.  Separated from the above list for clarity.
 
-  * `onDragStart`: A function.  Fires when dragging begins.
-  * `onDrag`: A function.  Fires for each tick of the drag.
-  * `onDragEnd`: A function.  Fires when dragging ends.
+  * `dragStart`: A function.  Fires when dragging begins.
+  * `drag`: A function.  Fires for each tick of the drag.
+  * `dragEnd`: A function.  Fires when dragging ends.
 
 _Important note!_ Only one handler can be bound per event.  This is done on purpose, as I didn't want to sacrifice performance for supporting multiple event handlers.
 
