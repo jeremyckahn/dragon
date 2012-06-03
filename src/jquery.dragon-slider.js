@@ -24,6 +24,16 @@
 
 
   /**
+   * @param {jQuery} $slider
+   * @param {jQuery} $handle
+   * @return {number}
+   */
+  function getInnerSliderWidth ($slider, $handle) {
+    return $slider.width() - $handle.width();
+  }
+
+
+  /**
    * @param {Object=} opts
    *   @param {number} width Width of the slider.
    *   @param {Function(number)} drag The drag event handler.  Receives the
@@ -44,7 +54,7 @@
     val = Math.max(0, val);
     var data = this.data('dragon-slider');
     var $handle = this.find('.dragon-slider-handle');
-    var scaledVal = val * (this.width() - $handle.outerWidth());
+    var scaledVal = val * getInnerSliderWidth(this, $handle);
     $handle.css('left', scaledVal);
     data.drag(this.dragonSliderGet());
   };
@@ -56,7 +66,7 @@
   $.fn.dragonSliderGet = function () {
     var $handle = this.find('.dragon-slider-handle');
     var left = $handle.position().left;
-    return left / (this.width() - $handle.outerWidth());
+    return left / getInnerSliderWidth(this, $handle);
   };
 
 
@@ -72,6 +82,7 @@
       $el
         .addClass('dragon-slider')
         .width(opts.width)
+        .on('mousedown', onSliderMousedown)
         .append($handle);
     });
   }
@@ -97,6 +108,9 @@
   }
 
 
+  /**
+   * @param {Object} ev
+   */
   function onHandleKeydown (ev) {
     var $el = $(this);
     var $parent = $el.parent();
@@ -110,6 +124,19 @@
     } else if (key === KEY_RIGHT) {
       $parent.dragonSliderSet(current + increment);
       $parent.trigger('drag');
+    }
+  }
+
+
+  /**
+   * @param {Object} ev
+   */
+  function onSliderMousedown (ev) {
+    if (ev.target === this) {
+      var $el = $(this);
+      var $handle = $el.find('.dragon-slider-handle');
+      var offset = ev.offsetX - ($handle.outerWidth() / 2);
+      $el.dragonSliderSet(offset / getInnerSliderWidth($el, $handle));
     }
   }
 
