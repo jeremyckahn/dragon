@@ -104,7 +104,11 @@
       'within': $('#dragon-container')
     });
 
-    $('#dragon-slider').dragonSlider();
+    $('#dragon-slider').dragonSlider({
+      'drag': function (val) {
+        console.log(val);
+      }
+    });
 
   </script>
 </body>

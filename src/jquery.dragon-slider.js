@@ -25,7 +25,9 @@
 
   /**
    * @param {Object=} opts
-   *   @param {number} width
+   *   @param {number} width Width of the slider.
+   *   @param {Function(number)} drag The drag event handler.  Receives the
+   *       current slider value.
    */
   $.fn.dragonSlider = function (opts) {
     opts = opts || {};
@@ -40,9 +42,11 @@
   $.fn.dragonSliderSet = function (val) {
     val = Math.min(1, val);
     val = Math.max(0, val);
+    var data = this.data('dragon-slider');
     var $handle = this.find('.dragon-slider-handle');
     var scaledVal = val * (this.width() - $handle.outerWidth());
     $handle.css('left', scaledVal);
+    data.drag(this.dragonSliderGet());
   };
 
 
@@ -63,12 +67,12 @@
   function initDragonSliderEls ($els, opts) {
     $els.each(function (i, el) {
       var $el = $(el);
+      $el.data('dragon-slider', $.extend({}, opts));
       var $handle = createDragHandle($el);
       $el
         .addClass('dragon-slider')
         .width(opts.width)
-        .append($handle)
-        .data('dragon-slider', $.extend({}, opts));
+        .append($handle);
     });
   }
 
@@ -78,9 +82,14 @@
    */
   function createDragHandle ($container) {
     var $handle = $(document.createElement('BUTTON'));
+    var data = $container.data('dragon-slider');
     $handle.addClass('dragon-slider-handle');
     $handle.dragon({
       'within': $container
+      ,'drag': function () {
+        // Setting the gotten value to centralize the "drag" event tiggering
+        $container.dragonSliderSet($container.dragonSliderGet());
+      }
     });
     $handle.on('keydown', onHandleKeydown);
 
@@ -92,13 +101,15 @@
     var $el = $(this);
     var $parent = $el.parent();
     var current = $parent.dragonSliderGet();
-    var increment = $parent.data('dragon-slider').increment;
+    var data = $parent.data('dragon-slider');
+    var increment = data.increment;
     var key = ev.which;
 
     if (key === KEY_LEFT) {
       $parent.dragonSliderSet(current - increment);
     } else if (key === KEY_RIGHT) {
       $parent.dragonSliderSet(current + increment);
+      $parent.trigger('drag');
     }
   }
 
