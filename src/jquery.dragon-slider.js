@@ -18,6 +18,7 @@
   var DEFAULTS = {
     'width': 250
     ,'increment': .02
+    ,'drag': $.noop
   };
   var KEY_RIGHT = 39;
   var KEY_LEFT = 37;
@@ -49,14 +50,17 @@
   /**
    * @param {number} val Between 0 and 1.
    */
-  $.fn.dragonSliderSet = function (val) {
+  $.fn.dragonSliderSet = function (val, triggerDrag) {
     val = Math.min(1, val);
     val = Math.max(0, val);
     var data = this.data('dragon-slider');
     var $handle = this.find('.dragon-slider-handle');
     var scaledVal = val * getInnerSliderWidth(this, $handle);
     $handle.css('left', scaledVal);
-    data.drag(this.dragonSliderGet());
+
+    if (triggerDrag !== false) {
+      data.drag(this.dragonSliderGet());
+    }
   };
 
 
