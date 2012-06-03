@@ -76,9 +76,15 @@
   }
 
 
-  function onMouseDown (evt) {
+  /**
+   * @param {Object} evt
+   * @param {number=} opt_pageX Can be used if evt.pageX is falsy (if the event
+   *     was synthesized)
+   * @param {number=} opt_pageY Can be used if evt.pageY is falsy (if the event
+   *     was synthesized)
+   */
+  function onMouseDown (evt, opt_pageX, opt_pageY) {
     var data = this.data('dragon');
-    var wasAlreadyDragging = data.isDragging;
     var onMouseUpInstance = $.proxy(onMouseUp, this);
     var onMouseMoveInstance = $.proxy(onMouseMove, this);
     var initialPosition = this.position();
@@ -88,8 +94,11 @@
       ,'isDragging': true
       ,'left': initialPosition.left
       ,'top': initialPosition.top
-      ,'grabPointX': initialPosition.left - evt.pageX
-      ,'grabPointY': initialPosition.top - evt.pageY
+      // The +!! ensures a valid number
+      ,'grabPointX': initialPosition.left -
+         (typeof evt.pageX === 'number' ? evt.pageX : opt_pageX)
+      ,'grabPointY': initialPosition.top -
+         (typeof evt.pageY === 'number' ? evt.pageY : opt_pageY)
     });
 
     $doc
