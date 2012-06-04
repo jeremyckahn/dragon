@@ -139,9 +139,10 @@
     if (ev.target === this) {
       var $el = $(this);
       var $handle = $el.find('.dragon-slider-handle');
-      var offset = ev.offsetX - ($handle.outerWidth() / 2);
+      var offset = ev.clientX - $el.offset().left;
+      offset -= $handle.outerWidth() / 2;
       $el.dragonSliderSet(offset / getInnerSliderWidth($el, $handle));
-      $handle.trigger('mousedown', ev.pageX, ev.pageDown);
+      $handle.trigger('mousedown', [ev.pageX, ev.pageY]);
     }
   }
 

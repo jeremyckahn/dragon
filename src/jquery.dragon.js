@@ -94,7 +94,6 @@
       ,'isDragging': true
       ,'left': initialPosition.left
       ,'top': initialPosition.top
-      // The +!! ensures a valid number
       ,'grabPointX': initialPosition.left -
          (typeof evt.pageX === 'number' ? evt.pageX : opt_pageX)
       ,'grabPointY': initialPosition.top -
