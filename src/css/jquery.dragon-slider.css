@@ -1,11 +1,12 @@
 .dragon-slider {
   background: #ddd;
+  border: solid 1px #666;
+  border-radius: 10px;
   position: relative;
   -webkit-border-radius: 10px;
   -moz-border-radius: 10px;
   -o-border-radius: 10px;
   -ms-border-radius: 10px;
-  border-radius: 10px;
 }
 
   .dragon-slider,
