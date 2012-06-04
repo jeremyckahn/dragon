@@ -106,7 +106,7 @@
       .on('mousemove', onMouseMoveInstance);
 
     $doc.on('selectstart', preventSelect);
-    fire('dragStart', this);
+    fire('dragStart', this, evt);
   }
 
 
@@ -121,7 +121,7 @@
 
     delete data.onMouseUp;
     delete data.onMouseMove;
-    fire('dragEnd', this);
+    fire('dragEnd', this, evt);
   }
 
 
@@ -184,7 +184,7 @@
     }
 
     this.css(newCoords);
-    fire('drag', this);
+    fire('drag', this, evt);
   }
 
 
@@ -207,9 +207,9 @@
 
 
   // Yep, you only get to bind one event handler.  Much faster this way.
-  function fire (event, $el) {
+  function fire (event, $el, evt) {
     var handler = $el.data('dragon-opts')[event];
-    handler && handler();
+    handler && handler(evt);
   }
 
 } (this.jQuery));
