@@ -1,6 +1,5 @@
 /**
  * jQuery Dragon.  It's a dragging plugin!
- *   v0.1.3
  *   By Jeremy Kahn (jeremyckahn@gmail.com)
  *   MIT License.
  *   For more info: https://github.com/jeremyckahn/dragon
@@ -211,7 +210,9 @@
     var handler = $el.data('dragon-opts')[event];
     // Patch the proxied Event Object
     evt.target = $el[0];
-    handler && handler(evt);
+    if (handler) {
+      handler(evt);
+    }
   }
 
 } (this.jQuery));
