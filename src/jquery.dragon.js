@@ -213,6 +213,8 @@
     if (handler) {
       handler(evt);
     }
+
+    $el.trigger(event);
   }
 
 } (this.jQuery));
