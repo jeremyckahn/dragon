@@ -8,7 +8,7 @@
 
   var $win = $(window);
   var $doc = $(document.documentElement);
-  var noop = $.noop || function () {};
+  var noop = $.noop || function () {}; // NOOP!
 
 
   /**
@@ -37,6 +37,10 @@
   });
 
 
+  /**
+   * @param {jQuery} $els
+   * @param {Object} opts
+   */
   function initDragonEls ($els, opts) {
     opts.axis = opts.axis || {};
     $els.attr('draggable', 'true');
@@ -65,10 +69,15 @@
         .data('dragon', {})
         .data('dragon-opts', opts);
 
+      $el.on('touchend', $.proxy(onTouchEnd, $el));
+      $el.on('touchmove', $.proxy(onTouchMove, $el));
+
       if (opts.handle) {
-        $el.on('mousedown', opts.handle, $.proxy(onMouseDown, $el));
+        $el.on('mousedown',  opts.handle, $.proxy(onMouseDown,  $el));
+        $el.on('touchstart', opts.handle, $.proxy(onTouchStart, $el));
       } else {
-        $el.on('mousedown', $.proxy(onMouseDown, $el));
+        $el.on('mousedown',  $.proxy(onMouseDown,  $el));
+        $el.on('touchstart', $.proxy(onTouchStart, $el));
       }
 
     });
@@ -76,14 +85,15 @@
 
 
   /**
-   * @param {Object} evt
-   * @param {number=} opt_pageX Can be used if evt.pageX is falsy (if the event
-   *     was synthesized)
-   * @param {number=} opt_pageY Can be used if evt.pageY is falsy (if the event
-   *     was synthesized)
+   * @param {jQuery.Event} evt
    */
-  function onMouseDown (evt, opt_pageX, opt_pageY) {
+  function onMouseDown (evt) {
     var data = this.data('dragon');
+
+    if (data.isDragging) {
+      return;
+    }
+
     var onMouseUpInstance = $.proxy(onMouseUp, this);
     var onMouseMoveInstance = $.proxy(onMouseMove, this);
     var initialPosition = this.position();
@@ -93,10 +103,8 @@
       ,'isDragging': true
       ,'left': initialPosition.left
       ,'top': initialPosition.top
-      ,'grabPointX': initialPosition.left -
-         (typeof evt.pageX === 'number' ? evt.pageX : opt_pageX)
-      ,'grabPointY': initialPosition.top -
-         (typeof evt.pageY === 'number' ? evt.pageY : opt_pageY)
+      ,'grabPointX': initialPosition.left - evt.pageX
+      ,'grabPointY': initialPosition.top - evt.pageY
     });
 
     $doc
@@ -104,44 +112,145 @@
       .on('blur', onMouseUpInstance)
       .on('mousemove', onMouseMoveInstance);
 
+    $win
+      .on('blur', onMouseUpInstance);
+
     $doc.on('selectstart', preventSelect);
     fire('dragStart', this, evt);
   }
 
 
-  function onMouseUp (evt) {
+  /**
+   * @param {jQuery.Event} evt
+   */
+  function onTouchStart (evt) {
+    evt.preventDefault();
+
     var data = this.data('dragon');
-    data.isDragging = false;
 
-    $doc.off('mouseup', data.onMouseUp)
-      .off('blur', data.onMouseUp)
-      .off('mousemove', data.onMouseMove)
-      .off('selectstart', preventSelect);
+    if (data.isDragging) {
+      return;
+    }
 
-    delete data.onMouseUp;
-    delete data.onMouseMove;
-    fire('dragEnd', this, evt);
+    var onTouchEndInstance = $.proxy(onTouchEnd, this);
+    var onTouchMoveInstance = $.proxy(onTouchMove, this);
+    var initialPosition = this.position();
+    this.data('dragon', {
+      'onTouchEnd': onTouchEndInstance
+      ,'onTouchMove': onTouchMoveInstance
+      ,'isDragging': true
+      ,'left': initialPosition.left
+      ,'top': initialPosition.top
+      ,'grabPointX': initialPosition.left - evt.originalEvent.pageX
+      ,'grabPointY': initialPosition.top - evt.originalEvent.pageY
+    });
+
+    $doc
+      .on('touchend', onTouchEndInstance)
+      .on('blur', onTouchEndInstance)
+      .on('touchmove', onTouchMoveInstance);
+
+    $win
+      .on('blur', onTouchEndInstance);
+
+    $doc.on('selectstart', preventSelect);
+    fire('dragStart', this, evt);
   }
 
 
+  /**
+   * @param {jQuery.Event} evt
+   */
+  function onMouseUp (evt) {
+    onDragEnd(this, evt, false);
+  }
+
+
+  /**
+   * @param {jQuery.Event} evt
+   */
+  function onTouchEnd (evt) {
+    evt.preventDefault();
+    onDragEnd(this, evt, true);
+  }
+
+
+  /**
+   * @param {jQuery} $el
+   * @param {jQuery.Event} evt
+   * @param {boolean} isTouch
+   */
+  function onDragEnd ($el, evt, isTouch) {
+    var data = $el.data('dragon');
+    data.isDragging = false;
+
+    if (isTouch) {
+      $doc.off('touchend', data.onTouchEnd)
+        .off('blur', data.onTouchEnd)
+        .off('touchmove', data.onTouchMove)
+        .off('selectstart', preventSelect);
+
+      $win.off('blur', data.onTouchEnd);
+
+      delete data.onTouchEnd;
+      delete data.onTouchMove;
+    } else {
+      $doc.off('mouseup', data.onMouseUp)
+        .off('blur', data.onMouseUp)
+        .off('mousemove', data.onMouseMove)
+        .off('selectstart', preventSelect);
+
+      $win.off('blur', data.onMouseUp);
+
+      delete data.onMouseUp;
+      delete data.onMouseMove;
+    }
+
+    fire('dragEnd', $el, evt);
+  }
+
+
+  /**
+   * @param {jQuery.Event} evt
+   */
   function onMouseMove (evt) {
-    var data = this.data('dragon');
-    var opts = this.data('dragon-opts');
+    onMove(this, evt, evt.pageX, evt.pageY);
+  }
+
+
+  /**
+   * @param {jQuery.Event} evt
+   */
+  function onTouchMove (evt) {
+    evt.preventDefault();
+    onMove(this, evt, evt.originalEvent.pageX, evt.originalEvent.pageY);
+  }
+
+
+  /**
+   * @param {jQuery} $el
+   * @param {jQuery.Event} evt
+   * @param {number} pageX
+   * @param {number} pageY
+   */
+  function onMove ($el, evt, pageX, pageY) {
+    var data = $el.data('dragon');
+    var opts = $el.data('dragon-opts');
     var newCoords = {};
 
     if (opts.axis !== $.fn.dragon.AXIS_X) {
-      newCoords.top = evt.pageY + data.grabPointY;
+      newCoords.top = pageY + data.grabPointY;
     }
 
     if (opts.axis !== $.fn.dragon.AXIS_Y) {
-      newCoords.left = evt.pageX + data.grabPointX;
+      newCoords.left = pageX + data.grabPointX;
     }
 
     if (opts.within) {
       // omg!
-      var offset = this.offset();
-      var width = this.outerWidth(true);
-      var height = this.outerHeight(true);
+      var offset = $el.offset();
+      var width = $el.outerWidth(true);
+      var height = $el.outerHeight(true);
       var container = opts.within;
       var containerWidth = container.innerWidth();
       var containerHeight = container.innerHeight();
@@ -152,10 +261,10 @@
       var containerPaddingLeft = parseInt(container.css('paddingLeft'), 10);
       var containerLeft = containerOffset.left + containerPaddingLeft;
       var containerRight = containerLeft + containerWidth;
-      var marginLeft = parseInt(this.css('marginLeft'), 10);
-      var marginTop = parseInt(this.css('marginTop'), 10);
-      var marginBottom = parseInt(this.css('marginBottom'), 10);
-      var marginRight = parseInt(this.css('marginRight'), 10);
+      var marginLeft = parseInt($el.css('marginLeft'), 10);
+      var marginTop = parseInt($el.css('marginTop'), 10);
+      var marginBottom = parseInt($el.css('marginBottom'), 10);
+      var marginRight = parseInt($el.css('marginRight'), 10);
       var minDistanceLeft = containerPaddingLeft - marginLeft;
       var minDistanceRight = containerWidth + marginRight;
       var minDistanceTop = containerPaddingTop - marginTop;
@@ -182,16 +291,19 @@
       }
     }
 
-    this.css(newCoords);
-    fire('drag', this, evt);
+    $el.css(newCoords);
+    fire('drag', $el, evt);
   }
 
 
   // This event handler fixes some craziness with the startselect event breaking
   // the cursor style.
   // http://forum.jquery.com/topic/chrome-text-select-cursor-on-drag
+  /**
+   * @param {jQuery.Event} evt
+   */
   function preventSelect(evt) {
-    preventDefault(evt);
+    evt.preventDefault();
     if (window.getSelection) {
       window.getSelection().removeAllRanges();
     } else if (document.selection) {
@@ -200,12 +312,20 @@
   }
 
 
+  /**
+   * @param {jQuery.Event} evt
+   */
   function preventDefault (evt) {
     evt.preventDefault();
   }
 
 
   // Yep, you only get to bind one event handler.  Much faster this way.
+  /**
+   * @param {string} event
+   * @param {jQuery} $el
+   * @param {jQuery.Event} evt
+   */
   function fire (event, $el, evt) {
     var handler = $el.data('dragon-opts')[event];
     // Patch the proxied Event Object
