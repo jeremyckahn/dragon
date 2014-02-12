@@ -331,7 +331,7 @@
     // Patch the proxied Event Object
     evt.target = $el[0];
     if (handler) {
-      handler(evt);
+      handler.call($el, evt);
     }
 
     $el.trigger(event);
