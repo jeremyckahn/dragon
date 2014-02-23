@@ -96,15 +96,15 @@
 
     var onMouseUpInstance = $.proxy(onMouseUp, this);
     var onMouseMoveInstance = $.proxy(onMouseMove, this);
-    var initialPosition = this.position();
+    var initialOffset = this.offset();
     this.data('dragon', {
       'onMouseUp': onMouseUpInstance
       ,'onMouseMove': onMouseMoveInstance
       ,'isDragging': true
-      ,'left': initialPosition.left
-      ,'top': initialPosition.top
-      ,'grabPointX': initialPosition.left - evt.pageX
-      ,'grabPointY': initialPosition.top - evt.pageY
+      ,'left': initialOffset.left
+      ,'top': initialOffset.top
+      ,'grabPointX': initialOffset.left - evt.pageX
+      ,'grabPointY': initialOffset.top - evt.pageY
     });
 
     $doc
@@ -134,15 +134,15 @@
 
     var onTouchEndInstance = $.proxy(onTouchEnd, this);
     var onTouchMoveInstance = $.proxy(onTouchMove, this);
-    var initialPosition = this.position();
+    var initialOffset = this.offset();
     this.data('dragon', {
       'onTouchEnd': onTouchEndInstance
       ,'onTouchMove': onTouchMoveInstance
       ,'isDragging': true
-      ,'left': initialPosition.left
-      ,'top': initialPosition.top
-      ,'grabPointX': initialPosition.left - evt.originalEvent.pageX
-      ,'grabPointY': initialPosition.top - evt.originalEvent.pageY
+      ,'left': initialOffset.left
+      ,'top': initialOffset.top
+      ,'grabPointX': initialOffset.left - evt.originalEvent.pageX
+      ,'grabPointY': initialOffset.top - evt.originalEvent.pageY
     });
 
     $doc
@@ -239,59 +239,49 @@
     var newCoords = {};
 
     if (opts.axis !== $.fn.dragon.AXIS_X) {
-      newCoords.top = pageY + data.grabPointY;
+      newCoords.top = Math.round(pageY + data.grabPointY);
     }
 
     if (opts.axis !== $.fn.dragon.AXIS_Y) {
-      newCoords.left = pageX + data.grabPointX;
+      newCoords.left = Math.round(pageX + data.grabPointX);
     }
 
     if (opts.within) {
-      // omg!
-      var offset = $el.offset();
-      var width = $el.outerWidth(true);
-      var height = $el.outerHeight(true);
-      var container = opts.within;
-      var containerWidth = container.innerWidth();
-      var containerHeight = container.innerHeight();
-      var containerOffset = container.offset();
-      var containerPaddingTop = parseInt(container.css('paddingTop'), 10);
-      var containerTop = containerOffset.top + containerPaddingTop;
-      var containerBottom = containerTop + containerHeight;
-      var containerPaddingLeft = parseInt(container.css('paddingLeft'), 10);
-      var containerLeft = containerOffset.left + containerPaddingLeft;
-      var containerRight = containerLeft + containerWidth;
-      var marginLeft = parseInt($el.css('marginLeft'), 10);
-      var marginTop = parseInt($el.css('marginTop'), 10);
-      var marginBottom = parseInt($el.css('marginBottom'), 10);
-      var marginRight = parseInt($el.css('marginRight'), 10);
-      var minDistanceLeft = containerPaddingLeft - marginLeft;
-      var minDistanceRight = containerWidth + marginRight;
-      var minDistanceTop = containerPaddingTop - marginTop;
-      var minDistanceBottom = containerHeight + marginBottom;
+      var $container = opts.within;
+      var containerOffset = $container.offset();
 
-      if (newCoords.left < minDistanceLeft
-          || offset.left < containerLeft) {
-        newCoords.left = minDistanceLeft;
-      }
+      // Adjust the bounding box for the CSS box model
+      var minLeft = containerOffset.left +
+          parseInt($container.css('padding-left'), 10) +
+          parseInt($container.css('border-left-width'), 10);
 
-      if (newCoords.left + width > minDistanceRight
-          || offset.left > containerRight) {
-        newCoords.left = minDistanceRight - width;
-      }
+      var minTop = containerOffset.top +
+          parseInt($container.css('padding-top'), 10) +
+          parseInt($container.css('border-top-width'), 10);
 
-      if (newCoords.top < minDistanceTop
-          || offset.top < containerTop) {
-        newCoords.top = minDistanceTop;
-      }
+      var maxLeft = containerOffset.left
+          + $container.outerWidth()
+          - parseInt($container.css('border-right-width'), 10)
+          - parseInt($container.css('padding-right'), 10)
+          + parseInt($el.css('margin-left'), 10)
+          + parseInt($el.css('margin-right'), 10)
+          - $el.outerWidth(true);
 
-      if (newCoords.top + height > minDistanceBottom
-          || offset.top > containerBottom) {
-        newCoords.top = minDistanceBottom - height;
-      }
+      var maxTop = containerOffset.top
+          + $container.outerHeight()
+          - parseInt($container.css('border-bottom-width'), 10)
+          - parseInt($container.css('padding-bottom'), 10)
+          + parseInt($el.css('margin-top'), 10)
+          + parseInt($el.css('margin-bottom'), 10)
+          - $el.outerHeight(true);
+
+      newCoords.top =  Math.min(newCoords.top, maxTop);
+      newCoords.top =  Math.max(newCoords.top, minTop);
+      newCoords.left = Math.min(newCoords.left, maxLeft);
+      newCoords.left = Math.max(newCoords.left, minLeft);
     }
 
-    $el.css(newCoords);
+    $el.offset(newCoords);
     fire('drag', $el, evt);
   }
 

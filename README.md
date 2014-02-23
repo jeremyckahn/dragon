@@ -35,7 +35,7 @@ $('.selector').dragon(options);
 
 `options` is an object.  It can be omitted.
 
-###Options:
+### Options:
 
   * `noCursor`: A boolean.  False by default.  If true, the mouse cursor icon
     isn't changed to `move` when the element is dragged.
@@ -48,7 +48,7 @@ $('.selector').dragon(options);
     the `dragon`'ed element.  This child element will act as the "handle" for
     dragging the `dragon`'ed element.
 
-###Events:
+### Events:
 
 These go in the `options` object as well.  Separated from the above list for
 clarity.
@@ -72,13 +72,13 @@ $('.container').dragonSlider(options);
 
 `options` is an object.  It can be omitted.
 
-###Options:
+### Options:
 
   * `drag`: A function.  Fires every tick that the user drags the slider handle
     for.
   * `width`: A number.  How many pixels wide the slider should be.
 
-###$.fn.dragonSliderGet
+### $.fn.dragonSliderGet
 
 ````javascript
 var slider = $('.container').dragonSlider();
@@ -87,7 +87,7 @@ slider.dragonSliderGet();
 
 Returns the value of the slider.  This value is normalized (between 0 and 1).
 
-###$.fn.dragonSliderSet
+### $.fn.dragonSliderSet
 
 ````javascript
 var slider = $('.container').dragonSlider();
