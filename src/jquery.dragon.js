@@ -30,6 +30,16 @@
   };
 
 
+  $.fn.dragonDisable = function () {
+    this.data('isDragonEnabled', false);
+  };
+
+
+  $.fn.dragonEnable = function () {
+    this.data('isDragonEnabled', true);
+  };
+
+
   // CONSTANTS
   $.extend($.fn.dragon, {
     'AXIS_X': 'x'
@@ -43,6 +53,7 @@
    */
   function initDragonEls ($els, opts) {
     opts.axis = opts.axis || {};
+    $els.addClass('dragon');
     $els.attr('draggable', 'true');
     $els.on('dragstart', preventDefault);
 
@@ -59,6 +70,8 @@
       var position = $el.position();
       var top = position.top;
       var left = position.left;
+
+      $el.data('isDragonEnabled', true);
 
       $el
         .css({
@@ -90,7 +103,7 @@
   function onMouseDown (evt) {
     var data = this.data('dragon');
 
-    if (data.isDragging) {
+    if (data.isDragging || !this.data('isDragonEnabled')) {
       return;
     }
 
@@ -128,7 +141,7 @@
 
     var data = this.data('dragon');
 
-    if (data.isDragging) {
+    if (data.isDragging || !this.data('isDragonEnabled')) {
       return;
     }
 

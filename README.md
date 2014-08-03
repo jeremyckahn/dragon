@@ -61,6 +61,14 @@ _Important note!_ Only one handler can be bound per event.  This is done on
 purpose, as I didn't want to sacrifice performance for supporting multiple
 event handlers.
 
+## $.fn.dragonDisable
+
+Disable Dragon temporarily.
+
+## $.fn.dragonEnable
+
+Re-enable Dragon after calling $.fn.dragonEnable.
+
 ## $.fn.dragonSlider
 
 To create a slider, load `src/css/jquery.dragon-slider.css`,
