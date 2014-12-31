@@ -44,9 +44,9 @@ $('.selector').dragon(options);
     the element can only be dragged along the Y axis.
   * `within`: A jQuery'ed element.  A containing element to constrain the
     movement of the `dragon`'ed element within.
-  * `handle`: A string.  This should be a jQuery selector targeting a child of
-    the `dragon`'ed element.  This child element will act as the "handle" for
-    dragging the `dragon`'ed element.
+  * `handle`: A jQuery object or string referencing a child of the `dragon`'ed
+    element.  This element will act as the "handle" for dragging the
+    `dragon`'ed element.
 
 ### Events:
 

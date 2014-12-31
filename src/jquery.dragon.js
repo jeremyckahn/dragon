@@ -31,8 +31,9 @@
    *     'y'.  Disabled by default.
    *   @param {jQuery} within The jQuery'ed element's bounds to constrain the
    *     drag range within.
-   *   @param {string} handle A jQuery selector for the "handle" element within
-   *     the dragon element that initializes the dragging action.
+   *   @param {string|jQuery} handle A jQuery instance or selector for the
+   *   "handle" element within the dragon element that initializes the dragging
+   *   action.
    *   @param {function} dragStart Fires when dragging begins.
    *   @param {function} drag Fires for every tick of the drag.
    *   @param {function} dragEnd Fires when dragging ends.
@@ -97,9 +98,12 @@
       $el.on('touchend', $.proxy(onTouchEnd, $el));
       $el.on('touchmove', $.proxy(onTouchMove, $el));
 
-      if (opts.handle) {
-        $el.on('mousedown',  opts.handle, $.proxy(onMouseDown,  $el));
-        $el.on('touchstart', opts.handle, $.proxy(onTouchStart, $el));
+      var handle = opts.handle;
+
+      if (handle) {
+        var $handle = typeof handle === 'string' ? $el.find(handle) : handle;
+        $handle.on('mousedown', $.proxy(onMouseDown,  $el));
+        $handle.on('touchstart', $.proxy(onTouchStart, $el));
       } else {
         $el.on('mousedown',  $.proxy(onMouseDown,  $el));
         $el.on('touchstart', $.proxy(onTouchStart, $el));
