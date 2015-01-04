@@ -60,6 +60,12 @@
   });
 
 
+  var ZERO_OUT_RIGHT_AND_BOTTOM = {
+    right: ''
+    ,bottom: ''
+  };
+
+
   /**
    * @param {jQuery} $els
    * @param {Object} opts
@@ -310,7 +316,9 @@
       newCoords.left = Math.max(newCoords.left, minLeft);
     }
 
-    $el.offset(newCoords);
+    $el
+      .css(ZERO_OUT_RIGHT_AND_BOTTOM)
+      .offset(newCoords);
     fire('drag', $el, evt);
   }
 
