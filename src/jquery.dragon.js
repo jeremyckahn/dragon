@@ -40,16 +40,19 @@
    */
   $.fn.dragon = function (opts) {
     initDragonEls(this, opts || {});
+    return this;
   };
 
 
   $.fn.dragonDisable = function () {
     this.data('isDragonEnabled', false);
+    return this;
   };
 
 
   $.fn.dragonEnable = function () {
     this.data('isDragonEnabled', true);
+    return this;
   };
 
 
