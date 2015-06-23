@@ -76,7 +76,7 @@
   function initDragonEls ($els, opts) {
     opts.axis = opts.axis || {};
     $els.addClass('dragon');
-    $els.attr('draggable', 'true');
+
     $els.on('dragstart', preventDefault);
 
     if (!opts.noCursor) {
@@ -132,6 +132,7 @@
       return;
     }
 
+    this.attr('draggable', 'true');
     var onMouseUpInstance = $.proxy(onMouseUp, this);
     var onMouseMoveInstance = $.proxy(onMouseMove, this);
     var initialOffset = this.offset();
@@ -221,6 +222,10 @@
   function onDragEnd ($el, evt, isTouch) {
     var data = $el.data('dragon');
     data.isDragging = false;
+
+    // Remove the "draggable" attribute so that text within the element can be
+    // selected when the element is not being dragged.
+    $el.attr('draggable', 'false');
 
     if (isTouch) {
       $doc.off('touchend', data.onTouchEnd)
