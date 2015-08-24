@@ -89,18 +89,10 @@
 
     $els.each(function (i, el) {
       var $el = $(el);
-      var position = $el.position();
-      var top = position.top;
-      var left = position.left;
 
       $el.data('isDragonEnabled', true);
 
       $el
-        .css({
-          'top': top
-          ,'left': left
-          ,'position': 'absolute'
-        })
         .data('dragon', {})
         .data('dragon-opts', opts);
 
