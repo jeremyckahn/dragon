@@ -226,6 +226,7 @@
     // Remove the "draggable" attribute so that text within the element can be
     // selected when the element is not being dragged.
     $el.attr('draggable', 'false');
+    $el.removeClass('isDragging');
 
     if (isTouch) {
       $doc.off('touchend', data.onTouchEnd)
@@ -325,6 +326,7 @@
     }
 
     $el
+      .addClass('isDragging')
       .css(ZERO_OUT_RIGHT_AND_BOTTOM)
       .offset(newCoords);
     fire('drag', $el, evt);
