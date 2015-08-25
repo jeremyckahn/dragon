@@ -27,6 +27,9 @@
    * Options:
    *
    *   @param {boolean} noCursor Prevents the drag cursor from being "move"
+   *   @param {boolean} noInitialPosition Prevent setting the initial inline
+   *   styles for top, left, and position (they are set once the user begins
+   *   dragging regardless).  False by default.
    *   @param {string} axis The axis to constrain dragging to.  Either 'x' or
    *     'y'.  Disabled by default.
    *   @param {jQuery} within The jQuery'ed element's bounds to constrain the
@@ -89,18 +92,22 @@
 
     $els.each(function (i, el) {
       var $el = $(el);
-      var position = $el.position();
-      var top = position.top;
-      var left = position.left;
 
       $el.data('isDragonEnabled', true);
 
+      if (!opts.noInitialPosition) {
+        var position = $el.position();
+        var top = position.top;
+        var left = position.left;
+
+        $el.css({
+          top: top
+          ,left: left
+          ,position: 'absolute'
+        });
+      }
+
       $el
-        .css({
-          'top': top
-          ,'left': left
-          ,'position': 'absolute'
-        })
         .data('dragon', {})
         .data('dragon-opts', opts);
 
@@ -226,6 +233,7 @@
     // Remove the "draggable" attribute so that text within the element can be
     // selected when the element is not being dragged.
     $el.attr('draggable', 'false');
+    $el.removeClass('is-dragging');
 
     if (isTouch) {
       $doc.off('touchend', data.onTouchEnd)
@@ -325,6 +333,7 @@
     }
 
     $el
+      .addClass('is-dragging')
       .css(ZERO_OUT_RIGHT_AND_BOTTOM)
       .offset(newCoords);
     fire('drag', $el, evt);
