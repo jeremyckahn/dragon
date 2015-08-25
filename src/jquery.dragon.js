@@ -27,6 +27,9 @@
    * Options:
    *
    *   @param {boolean} noCursor Prevents the drag cursor from being "move"
+   *   @param {boolean} noInitialPosition Prevent setting the initial inline
+   *   styles for top, left, and position (they are set once the user begins
+   *   dragging regardless).  False by default.
    *   @param {string} axis The axis to constrain dragging to.  Either 'x' or
    *     'y'.  Disabled by default.
    *   @param {jQuery} within The jQuery'ed element's bounds to constrain the
@@ -91,6 +94,18 @@
       var $el = $(el);
 
       $el.data('isDragonEnabled', true);
+
+      if (!opts.noInitialPosition) {
+        var position = $el.position();
+        var top = position.top;
+        var left = position.left;
+
+        $el.css({
+          top: top
+          ,left: left
+          ,position: 'absolute'
+        });
+      }
 
       $el
         .data('dragon', {})
