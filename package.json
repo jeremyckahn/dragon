@@ -1,0 +1,19 @@
+{
+  "name": "jquery-dragon",
+  "version": "0.4.6",
+  "main": "./src/jquery.dragon.js",
+  "dependencies": {
+    "jquery": "~2.0.3"
+  },
+  "description": "It's another draggin' plugin!",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jeremyckahn/dragon.git"
+  },
+  "author": "Jeremy Kahn",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jeremyckahn/dragon/issues"
+  },
+  "homepage": "https://github.com/jeremyckahn/dragon#readme"
+}
