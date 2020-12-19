@@ -114,9 +114,8 @@ being fired.
 
 ## Setup
 
-Requires [Bower](http://twitter.github.com/bower/) for jQuery dependency.  When
-Bower is installed, do this at the command line:
+Install dependencies to make changes to Dragon:
 
 ````
-$: bower install
+$: npm install
 ````
