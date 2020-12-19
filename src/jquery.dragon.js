@@ -170,13 +170,18 @@
    * @param {jQuery.Event} evt
    */
   function onTouchStart (evt) {
-    evt.preventDefault();
+    try {
+      evt.preventDefault();
+    } catch (e) {
+    }
 
     var data = this.data('dragon');
 
     if (data.isDragging || !this.data('isDragonEnabled')) {
       return;
     }
+
+    const { pageX, pageY } = getTouchCoordinatesFromEvent(evt);
 
     var onTouchEndInstance = $.proxy(onTouchEnd, this);
     var onTouchMoveInstance = $.proxy(onTouchMove, this);
@@ -187,8 +192,8 @@
       ,'isDragging': true
       ,'left': initialOffset.left
       ,'top': initialOffset.top
-      ,'grabPointX': initialOffset.left - evt.originalEvent.pageX
-      ,'grabPointY': initialOffset.top - evt.originalEvent.pageY
+      ,'grabPointX': initialOffset.left - pageX
+      ,'grabPointY': initialOffset.top - pageY
     });
 
     $doc
@@ -268,13 +273,33 @@
     onMove(this, evt, evt.pageX, evt.pageY);
   }
 
+  // Handle modern and legacy touch events.
+  // @see https://developer.mozilla.org/en-US/docs/Web/API/TouchEvent
+  function getTouchCoordinatesFromEvent (evt) {
+    const { originalEvent } = evt;
+    let pageX, pageY;
+
+    if (originalEvent.touches && originalEvent.touches.length) {
+      const [touch] = originalEvent.touches;
+      pageX = touch.pageX;
+      pageY = touch.pageY;
+    } else {
+      pageX = originalEvent.pageX;
+      pageY = originalEvent.pageY;
+    }
+
+    return { pageX, pageY };
+  }
 
   /**
    * @param {jQuery.Event} evt
    */
   function onTouchMove (evt) {
     evt.preventDefault();
-    onMove(this, evt, evt.originalEvent.pageX, evt.originalEvent.pageY);
+
+    const { pageX, pageY } = getTouchCoordinatesFromEvent(evt);
+
+    onMove(this, evt, pageX, pageY);
   }
 
 
