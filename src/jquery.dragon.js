@@ -170,10 +170,7 @@
    * @param {jQuery.Event} evt
    */
   function onTouchStart (evt) {
-    try {
-      evt.preventDefault();
-    } catch (e) {
-    }
+    evt.preventDefault();
 
     var data = this.data('dragon');
 
@@ -198,8 +195,7 @@
 
     $doc
       .on('touchend', onTouchEndInstance)
-      .on('blur', onTouchEndInstance)
-      .on('touchmove', onTouchMoveInstance);
+      .on('blur', onTouchEndInstance);
 
     $win
       .on('blur', onTouchEndInstance);
@@ -222,6 +218,7 @@
    */
   function onTouchEnd (evt) {
     evt.preventDefault();
+
     onDragEnd(this, evt, true);
   }
 
@@ -373,6 +370,7 @@
    */
   function preventSelect(evt) {
     evt.preventDefault();
+
     if (window.getSelection) {
       window.getSelection().removeAllRanges();
     } else if (document.selection) {
