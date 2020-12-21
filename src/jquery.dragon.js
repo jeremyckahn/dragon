@@ -111,20 +111,19 @@
         .data('dragon', {})
         .data('dragon-opts', opts);
 
-      var handle = opts.handle;
+      const handle = opts.handle;
+      let $target;
 
       if (handle) {
-        var $handle = typeof handle === 'string' ? $el.find(handle) : handle;
-        $handle.on('touchend', $.proxy(onTouchEnd, $el));
-        $handle.on('touchmove', $.proxy(onTouchMove, $el));
-        $handle.on('mousedown', $.proxy(onMouseDown,  $el));
-        $handle.on('touchstart', $.proxy(onTouchStart, $el));
+        $target = typeof handle === 'string' ? $el.find(handle) : handle;
       } else {
-        $el.on('touchend', $.proxy(onTouchEnd, $el));
-        $el.on('touchmove', $.proxy(onTouchMove, $el));
-        $el.on('mousedown',  $.proxy(onMouseDown,  $el));
-        $el.on('touchstart', $.proxy(onTouchStart, $el));
+        $target = $el;
       }
+
+      $target.on('touchend', $.proxy(onTouchEnd, $el));
+      $target.on('touchmove', $.proxy(onTouchMove, $el));
+      $target.on('mousedown',  $.proxy(onMouseDown,  $el));
+      $target.on('touchstart', $.proxy(onTouchStart, $el));
 
     });
   }
