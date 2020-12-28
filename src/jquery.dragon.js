@@ -120,8 +120,6 @@
         $target = $el;
       }
 
-      $target.on('touchend', $.proxy(onTouchEnd, $el));
-      $target.on('touchmove', $.proxy(onTouchMove, $el));
       $target.on('mousedown',  $.proxy(onMouseDown,  $el));
       $target.on('touchstart', $.proxy(onTouchStart, $el));
 
@@ -197,6 +195,10 @@
       .on('touchend', onTouchEndInstance)
       .on('blur', onTouchEndInstance);
 
+    // Can't use jQuery to bind to touchmove since it needs passive: false.
+    // Taken from: https://github.com/inuyaksa/jquery.nicescroll/issues/799#issuecomment-522275951
+    $doc[0].addEventListener('touchmove', onTouchMoveInstance, { passive: false });
+
     $win
       .on('blur', onTouchEndInstance);
 
@@ -240,8 +242,9 @@
     if (isTouch) {
       $doc.off('touchend', data.onTouchEnd)
         .off('blur', data.onTouchEnd)
-        .off('touchmove', data.onTouchMove)
         .off('selectstart', preventSelect);
+
+      $doc[0].removeEventListener('touchmove', data.onTouchMove);
 
       $win.off('blur', data.onTouchEnd);
 
@@ -270,10 +273,13 @@
     onMove(this, evt, evt.pageX, evt.pageY);
   }
 
-  // Handle modern and legacy touch events.
-  // @see https://developer.mozilla.org/en-US/docs/Web/API/TouchEvent
+  /**
+   * Handle modern and legacy touch events.
+   * @param {jQuery.Event|Event} evt
+   * @see https://developer.mozilla.org/en-US/docs/Web/API/TouchEvent
+   */
   function getTouchCoordinatesFromEvent (evt) {
-    const { originalEvent } = evt;
+    const originalEvent = evt instanceof $.Event ? evt.originalEvent : evt;
     let pageX, pageY;
 
     if (originalEvent.touches && originalEvent.touches.length) {
@@ -289,7 +295,8 @@
   }
 
   /**
-   * @param {jQuery.Event} evt
+   * @param {Event} evt NOTE: This specifically a native event, NOT a jQuery
+   * event. See how it is bound for the reason behind this.
    */
   function onTouchMove (evt) {
     evt.preventDefault();
