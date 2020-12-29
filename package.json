@@ -3,7 +3,7 @@
   "version": "0.5.1",
   "main": "./src/jquery.dragon.js",
   "dependencies": {
-    "jquery": "~2.1.0"
+    "jquery": "~3.5.0"
   },
   "description": "It's another draggin' plugin!",
   "repository": {
